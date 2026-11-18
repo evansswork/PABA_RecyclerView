@@ -15,6 +15,12 @@
         android:textOff="Grid View"
         android:textOn="List View" />
 
+    <Button
+        android:id="@+id/btnTambahWayang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tambah Wayang" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvWayang"
         android:layout_width="match_parent"

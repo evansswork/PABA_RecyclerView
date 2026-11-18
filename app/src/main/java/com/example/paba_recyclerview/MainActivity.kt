@@ -13,6 +13,8 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DefaultItemAnimator
+import android.widget.EditText
+import android.widget.LinearLayout
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
@@ -113,6 +115,70 @@ class MainActivity : AppCompatActivity() {
 
         binding.rvWayang.itemAnimator = DefaultItemAnimator().apply {
             removeDuration = 500L
+        }
+
+        binding.btnTambahWayang.setOnClickListener {
+            tampilkanFormTambahWayang(adapterWayang)
+        }
+    }
+
+    private fun tampilkanFormTambahWayang(adapterWayang: AdapterRecView) {
+        val form = LinearLayout(this)
+        form.orientation = LinearLayout.VERTICAL
+
+        val inputNama = EditText(this)
+        inputNama.hint = "Nama wayang"
+        form.addView(inputNama)
+
+        val inputKarakter = EditText(this)
+        inputKarakter.hint = "Karakter"
+        form.addView(inputKarakter)
+
+        val inputDeskripsi = EditText(this)
+        inputDeskripsi.hint = "Deskripsi"
+        form.addView(inputDeskripsi)
+
+        val inputFoto = EditText(this)
+        inputFoto.hint = "URL foto (opsional)"
+        form.addView(inputFoto)
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Tambah Wayang")
+            .setView(form)
+            .setNegativeButton("Batal", null)
+            .setPositiveButton("Simpan", null)
+            .create()
+
+        dialog.show()
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val nama = inputNama.text.toString().trim()
+            val karakter = inputKarakter.text.toString().trim()
+            val deskripsi = inputDeskripsi.text.toString().trim()
+            val foto = inputFoto.text.toString().trim()
+
+            if (nama.isBlank() || karakter.isBlank() || deskripsi.isBlank()) {
+                Toast.makeText(
+                    this,
+                    "Isi nama, karakter, dan deskripsi.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            val wayangBaru = DcWayang(
+                foto = foto,
+                nama = nama,
+                karakter = karakter,
+                deskripsi = deskripsi
+            )
+
+            val posisiBaru = _arWayang.size
+            _arWayang.add(wayangBaru)
+            adapterWayang.notifyItemInserted(posisiBaru)
+            binding.rvWayang.scrollToPosition(posisiBaru)
+
+            dialog.dismiss()
         }
     }
 }
