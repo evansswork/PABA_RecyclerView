@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.paba_recyclerview.databinding.ItemRecyclerBinding
 import coil.load
-
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 class AdapterRecView(
     private val listWayang: ArrayList<DcWayang>
 ) : RecyclerView.Adapter<AdapterRecView.ListViewHolder>() {
@@ -34,8 +34,14 @@ class AdapterRecView(
         holder.binding.karakterWayang.text = wayang.karakter
         holder.binding.deskripsiWayang.text = wayang.deskripsi
 
+        val circularProgress = CircularProgressDrawable(holder.itemView.context).apply {
+            strokeWidth = 5f
+            centerRadius = 20f
+            start()
+        }
+
         holder.binding.gambarWayang.load(wayang.foto) {
-            placeholder(R.drawable.ic_launcher_background)
+            placeholder(circularProgress)
             error(R.drawable.ic_launcher_background)
         }
     }
