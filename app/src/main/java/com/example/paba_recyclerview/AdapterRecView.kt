@@ -11,6 +11,16 @@ class AdapterRecView(
     private val listWayang: ArrayList<DcWayang>
 ) : RecyclerView.Adapter<AdapterRecView.ListViewHolder>() {
 
+    private lateinit var onItemClickCallback: OnItemClickCallback
+
+    interface OnItemClickCallback {
+        fun onItemClicked(data: DcWayang)
+        fun delData(position: Int)
+    }
+
+    fun setOnItemClickCallback(callback: OnItemClickCallback) {
+        onItemClickCallback = callback
+    }
     inner class ListViewHolder(
         val binding: ItemRecyclerBinding
     ) : RecyclerView.ViewHolder(binding.root)
@@ -46,12 +56,24 @@ class AdapterRecView(
             error(android.R.drawable.ic_menu_report_image)
         }
 
+        holder.binding.namaWayang.setOnClickListener {
+            onItemClickCallback.onItemClicked(wayang)
+        }
+
         holder.binding.gambarWayang.setOnClickListener {
             Toast.makeText(
                 holder.itemView.context,
                 wayang.nama,
                 Toast.LENGTH_SHORT
             ).show()
+        }
+
+        holder.binding.btnHapus.setOnClickListener {
+            val positionSaatDiklik = holder.bindingAdapterPosition
+
+            if (positionSaatDiklik != RecyclerView.NO_POSITION) {
+                onItemClickCallback.delData(positionSaatDiklik)
+            }
         }
     }
 }

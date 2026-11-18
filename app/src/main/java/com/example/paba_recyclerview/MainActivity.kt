@@ -9,6 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.paba_recyclerview.databinding.ActivityMainBinding
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import android.content.Intent
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.DefaultItemAnimator
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
@@ -23,14 +27,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         siapkanData()
         tambahData()
@@ -62,14 +66,53 @@ class MainActivity : AppCompatActivity() {
 
     private fun tampilkanData() {
         if (binding.btnToggleLayout.isChecked) {
-            binding.rvWayang.layoutManager = GridLayoutManager(this, 2)
-        } else {
             binding.rvWayang.layoutManager = StaggeredGridLayoutManager(
                 2,
                 StaggeredGridLayoutManager.VERTICAL
             )
+        } else {
+            binding.rvWayang.layoutManager = LinearLayoutManager(this)
         }
 
-        binding.rvWayang.adapter = AdapterRecView(_arWayang)
+        val adapterWayang = AdapterRecView(_arWayang)
+
+        adapterWayang.setOnItemClickCallback(object : AdapterRecView.OnItemClickCallback {
+            override fun onItemClicked(data: DcWayang) {
+                val intentDetail = Intent(this@MainActivity, DetailActivity::class.java)
+
+                intentDetail.putExtra("nama", data.nama)
+                intentDetail.putExtra("karakter", data.karakter)
+                intentDetail.putExtra("deskripsi", data.deskripsi)
+                intentDetail.putExtra("foto", data.foto)
+
+                startActivity(intentDetail)
+            }
+
+            override fun delData(position: Int) {
+                val wayang = _arWayang[position]
+
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle("Konfirmasi hapus data")
+                    .setMessage("Hapus ${wayang.nama} dari daftar?")
+                    .setPositiveButton("Hapus") { _, _ ->
+                        _arWayang.removeAt(position)
+                        adapterWayang.notifyItemRemoved(position)
+
+                        Toast.makeText(
+                            this@MainActivity,
+                            "${wayang.nama} berhasil dihapus",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    .setNegativeButton("Batal", null)
+                    .show()
+            }
+        })
+
+        binding.rvWayang.adapter = adapterWayang
+
+        binding.rvWayang.itemAnimator = DefaultItemAnimator().apply {
+            removeDuration = 500L
+        }
     }
 }
