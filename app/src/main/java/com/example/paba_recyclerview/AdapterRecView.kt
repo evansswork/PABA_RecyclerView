@@ -42,7 +42,7 @@ class AdapterRecView(
 
         holder.binding.gambarWayang.load(wayang.foto) {
             placeholder(circularProgress)
-            error(R.drawable.ic_launcher_background)
+            error(android.R.drawable.ic_menu_report_image)
         }
     }
 }
