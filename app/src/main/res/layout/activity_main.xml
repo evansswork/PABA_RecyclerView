@@ -6,9 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <ToggleButton
+        android:id="@+id/btnToggleLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:textOff="Grid View"
+        android:textOn="List View" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvWayang"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>
