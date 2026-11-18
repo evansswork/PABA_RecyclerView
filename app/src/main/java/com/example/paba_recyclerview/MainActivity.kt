@@ -64,7 +64,10 @@ class MainActivity : AppCompatActivity() {
         if (binding.btnToggleLayout.isChecked) {
             binding.rvWayang.layoutManager = GridLayoutManager(this, 2)
         } else {
-            binding.rvWayang.layoutManager = LinearLayoutManager(this)
+            binding.rvWayang.layoutManager = StaggeredGridLayoutManager(
+                2,
+                StaggeredGridLayoutManager.VERTICAL
+            )
         }
 
         binding.rvWayang.adapter = AdapterRecView(_arWayang)

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.paba_recyclerview.databinding.ItemRecyclerBinding
 import coil.load
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import android.widget.Toast
 class AdapterRecView(
     private val listWayang: ArrayList<DcWayang>
 ) : RecyclerView.Adapter<AdapterRecView.ListViewHolder>() {
@@ -43,6 +44,14 @@ class AdapterRecView(
         holder.binding.gambarWayang.load(wayang.foto) {
             placeholder(circularProgress)
             error(android.R.drawable.ic_menu_report_image)
+        }
+
+        holder.binding.gambarWayang.setOnClickListener {
+            Toast.makeText(
+                holder.itemView.context,
+                wayang.nama,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }
